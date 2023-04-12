@@ -1,11 +1,12 @@
-package com.example.restuarantfinder
+package com.example.restuarantfinder.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
+import com.example.restuarantfinder.screen.HomeScreen
+import com.example.restuarantfinder.screen.ProfileScreen
+import com.example.restuarantfinder.screen.RestaurantListScreen
 
 @Composable
 fun Navigation(navController: NavHostController){
@@ -14,7 +15,10 @@ fun Navigation(navController: NavHostController){
             HomeScreen(navController =navController)
         }
         composable(route = Screen.RestaurantListScreen.route){
-            RestaurantListScreen()
+            RestaurantListScreen(navController =navController)
+        }
+        composable(route = Screen.ProfileScreen.route){
+            ProfileScreen(navController = navController)
         }
     }
 }
