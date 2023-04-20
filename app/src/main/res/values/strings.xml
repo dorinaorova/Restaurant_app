@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">RestuarantFinder</string>
+    <string name="app_name">RESTing</string>
     <string name="title_activity_restaurant_list">RestaurantListActivity</string>
 </resources>
