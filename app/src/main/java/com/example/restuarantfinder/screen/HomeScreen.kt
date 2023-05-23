@@ -1,8 +1,12 @@
 package com.example.restuarantfinder.screen
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -52,27 +56,76 @@ fun LoginPage(navController: NavController) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        val username = remember { mutableStateOf(TextFieldValue()) }
+        val email = remember { mutableStateOf(TextFieldValue()) }
         val password = remember { mutableStateOf(TextFieldValue()) }
 
-        Box(modifier = Modifier.fillMaxWidth(0.5f)) {
+        Column(modifier = Modifier.fillMaxWidth(0.5f),
+            horizontalAlignment = Alignment.CenterHorizontally) {
             ImageResource()
         }
         Text(text = "RESTIng", style = TextStyle(fontSize = 40.sp, fontFamily = FontFamily.Serif))
 
         Spacer(modifier = Modifier.height(20.dp))
-        TextField(
-            label = { Text(text = "Username") },
-            value = username.value,
-            onValueChange = { username.value = it })
+        BasicTextField(
+            value = email.value,
+            onValueChange = { email.value = it},
+            textStyle = TextStyle(
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Medium,
+                color = colorResource(id = R.color.secondary_text)
+            ),
+            decorationBox = { innerTextField ->
+                Row(
+                    modifier = Modifier
+                        .padding(horizontal = 30.dp, vertical = 10.dp)
+                        .fillMaxWidth()
+                        .background(
+                            color = Color.White,
+                            shape = RoundedCornerShape(size = 16.dp)
+                        )
+                        .border(
+                            width = 2.dp,
+                            color = colorResource(id = R.color.divider),
+                            shape = RoundedCornerShape(size = 16.dp)
+                        )
+                        .padding(all = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    innerTextField()
+                }
+            }
+        )
 
         Spacer(modifier = Modifier.height(20.dp))
-        TextField(
-            label = { Text(text = "Password") },
+        BasicTextField(
             value = password.value,
-            visualTransformation = PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            onValueChange = { password.value = it })
+            onValueChange = { password.value = it},
+            textStyle = TextStyle(
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Medium,
+                color = colorResource(id = R.color.secondary_text)
+            ),
+            decorationBox = { innerTextField ->
+                Row(
+                    modifier = Modifier
+                        .padding(horizontal = 30.dp, vertical = 10.dp)
+                        .fillMaxWidth()
+                        .background(
+                            color = Color.White,
+                            shape = RoundedCornerShape(size = 16.dp)
+                        )
+                        .border(
+                            width = 2.dp,
+                            color = colorResource(id = R.color.divider),
+                            shape = RoundedCornerShape(size = 16.dp)
+                        )
+                        .padding(all = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    innerTextField()
+                }
+            }
+        )
 
         Spacer(modifier = Modifier.height(20.dp))
         Box(modifier = Modifier.padding(40.dp, 0.dp, 40.dp, 0.dp)) {
@@ -89,7 +142,8 @@ fun LoginPage(navController: NavController) {
             ) {
                 Text(text = "Login",
                 color = Color.White,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                    modifier = Modifier.clickable (onClick = {navController.navigate(route = Screen.RestaurantListScreen.route)})
                 )
             }
         }
@@ -100,7 +154,7 @@ fun LoginPage(navController: NavController) {
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .padding(20.dp),
-                onClick = { },
+                onClick = {navController.navigate(route = Screen.SignUpScreen.route) },
                 style = TextStyle(
                     fontSize = 14.sp,
                     fontFamily = FontFamily.Default,

@@ -2,6 +2,7 @@ package com.example.restuarantfinder.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -24,6 +25,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.restuarantfinder.R
 import com.example.restuarantfinder.data.Restaurant
+import com.example.restuarantfinder.navigation.Screen
 import com.example.restuarantfinder.screen.navbar.NavBar
 
 @Composable
@@ -35,16 +37,19 @@ fun RestaurantListScreen(navController: NavController){
     }
     Scaffold(
         content = {
-            Modifier.padding(it)
-            Column(modifier = Modifier.background(colorResource(R.color.light_primary))) {
-                SearchBar()
-                Column(
-                    modifier = Modifier
-                        .padding(8.dp)
-                ) {
-                    LazyColumn {
-                        items(restaurants) { item ->
-                            ListItem(item)
+                paddingValues ->
+            Box(modifier = Modifier.fillMaxSize()
+                .padding(paddingValues)) {
+                Column(modifier = Modifier.background(colorResource(R.color.light_primary))) {
+                    SearchBar()
+                    Column(
+                        modifier = Modifier
+                            .padding(8.dp)
+                    ) {
+                        LazyColumn {
+                            items(restaurants) { item ->
+                                ListItem(navController, item)
+                            }
                         }
                     }
                 }
@@ -110,11 +115,12 @@ fun SearchBar(
 }
 
 @Composable
-fun ListItem(item: Restaurant = Restaurant("Étterem 1", "Budapest 11.ker", "+36201111111", "email@email.com", "10:00-20:00",null, null)){
+fun ListItem(navController: NavController ,item: Restaurant = Restaurant("Étterem 1", "Budapest 11.ker", "+36201111111", "email@email.com", "10:00-20:00",null, null)){
     Box (modifier = Modifier
         .padding(vertical = 10.dp, horizontal = 5.dp)
         .background(color = Color.White, shape = RoundedCornerShape(size = 16.dp))
-        .fillMaxWidth()) {
+        .fillMaxWidth()
+        .clickable (onClick = {navController.navigate(route = Screen.RestaurantScreen.route)})) {
         Column(
             modifier = Modifier.padding(8.dp)
         ) {
