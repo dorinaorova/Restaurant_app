@@ -75,7 +75,7 @@ fun UserDetail(user: User){
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically)
         {
-            Column(modifier = Modifier.padding(start = 16.dp)){
+            Column(modifier = Modifier.padding(start = 16.dp, top=5.dp)){
                 Text(
                     text=user.name,
                     style= TextStyle(

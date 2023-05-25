@@ -33,5 +33,8 @@ fun Navigation(navController: NavHostController){
             Log.d("Arg", it.arguments?.getString("title").toString())
             MenuScreen(navController = navController)
         }
+        composable(route = Screen.ReservationScreen.route){
+            ReservationScreen(navController = navController)
+        }
     }
 }

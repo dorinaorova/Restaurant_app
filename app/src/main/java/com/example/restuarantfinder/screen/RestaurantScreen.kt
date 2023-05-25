@@ -127,10 +127,11 @@ fun Body(restaurant: Restaurant, scroll: ScrollState, navController: NavControll
                         )
                         Text(
                             text = restaurant.phone,
+                            modifier = Modifier.padding(start=5.dp)
                         )
                     }
                     Row(
-                        modifier = Modifier.padding(start = 30.dp),
+                        modifier = Modifier.padding(start = 30.dp,top = 5.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
