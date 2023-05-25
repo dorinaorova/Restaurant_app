@@ -66,7 +66,7 @@ private fun Header(){
 }
 
 @Composable
-fun Datas(scroll : ScrollState, navController: NavController){
+private fun Datas(scroll : ScrollState, navController: NavController){
     Column(modifier = Modifier
                     .fillMaxSize()) {
         Spacer(modifier = Modifier
@@ -109,7 +109,7 @@ fun Datas(scroll : ScrollState, navController: NavController){
 }
 
 @Composable
-fun DataField(text: String, icon: ImageVector){
+private fun DataField(text: String, icon: ImageVector){
     var tfvalue by remember {
         mutableStateOf("")
     }

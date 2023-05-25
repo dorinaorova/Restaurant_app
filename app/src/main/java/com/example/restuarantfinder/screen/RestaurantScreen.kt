@@ -13,6 +13,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowForward
 import androidx.compose.material.icons.rounded.Email
+import androidx.compose.material.icons.rounded.List
 import androidx.compose.material.icons.rounded.Phone
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -113,44 +114,64 @@ fun Body(restaurant: Restaurant, scroll: ScrollState, navController: NavControll
                 style = MaterialTheme.typography.overline,
                 modifier = Modifier.padding(start = 40.dp)
             )
-            Row (modifier = Modifier.padding(start = 30.dp, top = 10.dp),
-                verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    Icons.Rounded.Phone,
-                    contentDescription = "Restaurant phone"
-                )
-                Text(
-                    text = restaurant.phone,
-                )
-            }
-            Row(modifier = Modifier.padding(start = 30.dp),
-                verticalAlignment = Alignment.CenterVertically){
-                Icon(
-                    Icons.Rounded.Email,
-                    contentDescription = "Restaurant email"
-                )
-                Text(
-                    text=restaurant.email,
-                )
+            Row(modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween) {
+                Column {
+                    Row(
+                        modifier = Modifier.padding(start = 30.dp, top = 10.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            Icons.Rounded.Phone,
+                            contentDescription = "Restaurant phone"
+                        )
+                        Text(
+                            text = restaurant.phone,
+                        )
+                    }
+                    Row(
+                        modifier = Modifier.padding(start = 30.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            Icons.Rounded.Email,
+                            contentDescription = "Restaurant email"
+                        )
+                        Text(
+                            text = restaurant.email,
+                        )
+                    }
+                }
+                IconButton(onClick = { navController.navigate(route = Screen.ReservationScreen.route) },
+                            modifier = Modifier.padding(end = 30.dp)){
+                            Icon(
+                                Icons.Rounded.List,
+                                contentDescription = null,
+                                tint = colorResource(id = R.color.secondary_text)
+                            )
+                        }
             }
             MenuRow(restaurant.menu_Food!!, "Étlap", navController)
             MenuRow(restaurant.menu_Drink!!, "Itallap", navController)
-
-
         }
     }
 }
 
 @Composable
 fun MenuRow(list: List<MenuItem>, title: String, navController: NavController){
-    Canvas(Modifier.fillMaxWidth().height(1.dp).padding(top=20.dp)) {
+    Canvas(
+        Modifier
+            .fillMaxWidth()
+            .height(1.dp)
+            .padding(top = 20.dp)) {
         drawLine(
             color = Color.Black,
             start = Offset(0f, 0f),
             end = Offset(size.width, 0f),
         )
     }
-    Row(modifier = Modifier.padding(top=30.dp, bottom = 10.dp, start=20.dp, end = 40.dp)
+    Row(modifier = Modifier
+        .padding(top = 35.dp, bottom = 10.dp, start = 20.dp, end = 40.dp)
         .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
@@ -162,8 +183,9 @@ fun MenuRow(list: List<MenuItem>, title: String, navController: NavController){
         IconButton(onClick = {navController.navigate(route = Screen.MenuScreen.route)},
         modifier = Modifier
             .size(10.dp)
-            .background(colorResource(id = R.color.light_primary), shape = CircleShape)
-            ) {
+            .background(
+                colorResource(id = R.color.light_primary), shape = CircleShape
+            )) {
             Icon(
                 Icons.Rounded.ArrowForward,
                 contentDescription = null
@@ -171,13 +193,13 @@ fun MenuRow(list: List<MenuItem>, title: String, navController: NavController){
         }
     }
     LazyRow{
-        itemsIndexed(list){
+        itemsIndexed(CreateList(list)){
                 index, item -> MenuListItem(item = item)
         }
     }
 }
 @Composable
-fun MenuListItem(item: MenuItem){
+private fun MenuListItem(item: MenuItem){
     Box(modifier = Modifier
         .height(150.dp)
         .width(200.dp)
@@ -186,12 +208,26 @@ fun MenuListItem(item: MenuItem){
             colorResource(id = R.color.light_primary),
             shape = RoundedCornerShape(size = 16.dp)
         )){
-        Text(text = item.name)
+        Text(text = item.name,
+            color = colorResource(id = R.color.secondary_text),
+            style=MaterialTheme.typography.subtitle1,
+            modifier = Modifier.align(Alignment.Center)
+        )
     }
 }
 
-fun Init(): Restaurant {
-    var restaurant = Restaurant("Étterem 1", "Budapest 11.ker", "+36201111111", "email@email.com", "10:00-20:00", null, null)
+private fun CreateList(menuBase: List<MenuItem>):List<MenuItem>{
+    if(menuBase.size>5) {
+        var menu = arrayListOf<MenuItem>()
+        for (i in 0..5) {
+            menu.add(menuBase[i])
+        }
+        return menu
+    }else return menuBase
+}
+
+private fun Init(): Restaurant {
+    var restaurant = Restaurant(0,"Étterem 1", "Budapest 11.ker", "+36201111111", "email@email.com", "10:00-20:00", null, null)
 
     val food1 = MenuItem("Food1", 2000, "Cat ipsum dolor sit amet, russian blue, thai and sphynx so savannah. Malkin cornish rex but tom malkin for cheetah scottish fold.")
     val food2 = MenuItem("Food2", 2300, "Cat ipsum dolor sit amet, russian blue, thai and sphynx so savannah. Malkin cornish rex but tom malkin for cheetah scottish fold.")

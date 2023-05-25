@@ -32,8 +32,8 @@ import com.example.restuarantfinder.screen.navbar.NavBar
 fun RestaurantListScreen(navController: NavController){
     var restaurants = arrayListOf<Restaurant>()
     for (i in 0 .. 25   ) {
-        restaurants.add(Restaurant("Étterem 1", "Budapest 11.ker", "+36201111111", "email@email.com", "10:00-20:00", null, null))
-        restaurants.add(Restaurant("Étterem 2", "Budapest 12.ker", "+36202222222", "email@email.com", "10:00-20:00",null, null))
+        restaurants.add(Restaurant(0,"Étterem 1", "Budapest 11.ker", "+36201111111", "email@email.com", "10:00-20:00", null, null))
+        restaurants.add(Restaurant(1, "Étterem 2", "Budapest 12.ker", "+36202222222", "email@email.com", "10:00-20:00",null, null))
     }
     Scaffold(
         content = {
@@ -115,7 +115,7 @@ fun SearchBar(
 }
 
 @Composable
-fun ListItem(navController: NavController ,item: Restaurant = Restaurant("Étterem 1", "Budapest 11.ker", "+36201111111", "email@email.com", "10:00-20:00",null, null)){
+private fun ListItem(navController: NavController ,item: Restaurant = Restaurant(0,"Étterem 1", "Budapest 11.ker", "+36201111111", "email@email.com", "10:00-20:00",null, null)){
     Box (modifier = Modifier
         .padding(vertical = 10.dp, horizontal = 5.dp)
         .background(color = Color.White, shape = RoundedCornerShape(size = 16.dp))
