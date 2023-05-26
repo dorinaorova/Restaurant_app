@@ -33,13 +33,15 @@ import com.example.restuarantfinder.R
 import com.example.restuarantfinder.navigation.Screen
 import java.util.*
 
-var date = ""
-var time = ""
-var people = 0
+private var date = ""
+private var time = ""
+private var people = 0
+private var restaurantId = 0
 
 
 @Composable
-fun ReservationScreen(navController: NavController){
+fun ReservationScreen(navController: NavController, id: Int){
+    restaurantId = id
     Box(modifier = Modifier.fillMaxSize()){
         val scroll = rememberScrollState(0)
         Header()
@@ -64,7 +66,7 @@ private fun Header(){
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Booking",
+                text = "Asztal foglalás",
                 fontFamily = FontFamily.Serif,
                 style = MaterialTheme.typography.h4,
                 color = colorResource(id = R.color.primary_text),
@@ -291,5 +293,5 @@ private fun PeopleForm(){
 @Composable
 @Preview(showBackground =  true)
 fun ReservationScreenPreview(){
-    ReservationScreen(navController = rememberNavController())
+    ReservationScreen(navController = rememberNavController(), 0)
 }

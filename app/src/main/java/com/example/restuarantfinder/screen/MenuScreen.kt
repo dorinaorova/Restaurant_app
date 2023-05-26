@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -26,18 +27,20 @@ import com.example.restuarantfinder.data.MenuItem
 import com.example.restuarantfinder.data.Reservation
 import com.example.restuarantfinder.navigation.Screen
 
+private var menuTitle =""
 @Composable
-fun MenuScreen(navController: NavController){
+fun MenuScreen(navController: NavController, title: String?){
     var menu = Init()
+    menuTitle = title!!
     Box(modifier = Modifier.fillMaxSize()) {
         Column() {
-            Header(navController)
+            Header()
             MenuList(menu)
         }
     }
 }
 @Composable
-private fun Header(navController: NavController){
+private fun Header(){
     Box(modifier = Modifier.fillMaxWidth()){
         Image(
             painterResource(id = R.drawable.background),
@@ -45,14 +48,16 @@ private fun Header(navController: NavController){
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(60.dp),
+                .height(100.dp),
         )
         Row(modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center) {
             Text(
-                text = "Étlap",
-                style = MaterialTheme.typography.h6,
-                modifier = Modifier.padding(16.dp)
+                text = menuTitle,
+                fontFamily = FontFamily.Serif,
+                style = MaterialTheme.typography.h5,
+                color = colorResource(id = R.color.primary_text),
+                modifier = Modifier.padding(top = 30.dp, bottom = 35.dp)
             )
         }
     }
@@ -62,7 +67,6 @@ private fun Header(navController: NavController){
 private fun MenuList(menu: List<MenuItem>){
     Column(
         modifier = Modifier
-            //.padding(8.dp)
             .background(colorResource(R.color.light_primary))
     ) {
         LazyColumn {
@@ -115,5 +119,5 @@ private fun Init(): List<MenuItem>{
 @Composable
 @Preview(showBackground =  true)
 fun MenuScreenPreview(){
-    MenuScreen(navController = rememberNavController())
+    MenuScreen(navController = rememberNavController(), "Étlap")
 }

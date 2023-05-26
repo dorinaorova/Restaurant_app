@@ -1,12 +1,9 @@
 package com.example.restuarantfinder.screen
 
-import android.util.Log
-import android.view.Menu
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -19,18 +16,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.restuarantfinder.R
@@ -39,11 +30,12 @@ import com.example.restuarantfinder.data.Restaurant
 import com.example.restuarantfinder.navigation.Screen
 import com.example.restuarantfinder.screen.navbar.NavBar
 
-private val TitleHeight = 128.dp
+private var restaurantId =0
 
 @Composable
-fun RestaurantScreen(navController: NavController){
+fun RestaurantScreen(navController: NavController, id: Int){
     var restaurant= Init()
+    restaurantId = id
     Scaffold(
         content = {paddingValues ->
             Box(modifier = Modifier
@@ -123,7 +115,7 @@ fun Body(restaurant: Restaurant, scroll: ScrollState, navController: NavControll
                     ) {
                         Icon(
                             Icons.Rounded.Phone,
-                            contentDescription = "Restaurant phone"
+                            contentDescription = null
                         )
                         Text(
                             text = restaurant.phone,
@@ -136,14 +128,16 @@ fun Body(restaurant: Restaurant, scroll: ScrollState, navController: NavControll
                     ) {
                         Icon(
                             Icons.Rounded.Email,
-                            contentDescription = "Restaurant email"
+                            contentDescription = null
                         )
                         Text(
                             text = restaurant.email,
                         )
                     }
                 }
-                IconButton(onClick = { navController.navigate(route = Screen.ReservationScreen.route) },
+                IconButton(onClick = {
+                    var route = Screen.ReservationScreen.route+"/"+restaurant.id
+                    navController.navigate(route = route) },
                             modifier = Modifier.padding(end = 30.dp)){
                             Icon(
                                 Icons.Rounded.List,
@@ -180,8 +174,8 @@ fun MenuRow(list: List<MenuItem>, title: String, navController: NavController){
         Text(text=title,
             style= MaterialTheme.typography.h6,
             color = colorResource(id = R.color.secondary_text))
-        Log.d("Route", Screen.MenuScreen.route+"/"+title)
-        IconButton(onClick = {navController.navigate(route = Screen.MenuScreen.route)},
+        var route = Screen.MenuScreen.route+"/"+title
+        IconButton(onClick = {navController.navigate(route = route)},
         modifier = Modifier
             .size(10.dp)
             .background(
@@ -251,5 +245,5 @@ private fun Init(): Restaurant {
 @Composable
 @Preview(showBackground =  true)
 fun RestaurantScreenPreview(){
-    RestaurantScreen(navController = rememberNavController())
+    RestaurantScreen(navController = rememberNavController(), 0)
 }

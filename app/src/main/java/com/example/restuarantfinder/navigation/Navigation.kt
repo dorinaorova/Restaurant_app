@@ -23,18 +23,18 @@ fun Navigation(navController: NavHostController){
         composable(route = Screen.ProfileScreen.route){
             ProfileScreen(navController = navController)
         }
-        composable(route = Screen.RestaurantScreen.route){
-            RestaurantScreen(navController = navController)
+        composable(route = Screen.RestaurantScreen.route+"/{id}"){
+            RestaurantScreen(navController = navController, id = it.arguments?.getInt("id")!!)
         }
         composable(route = Screen.SignUpScreen.route){
             SignUpScreen(navController = navController)
         }
-        composable(route = Screen.MenuScreen.route){
+        composable(route = Screen.MenuScreen.route+"/{title}"){
             Log.d("Arg", it.arguments?.getString("title").toString())
-            MenuScreen(navController = navController)
+            MenuScreen(navController = navController, title = it.arguments?.getString("title").toString())
         }
-        composable(route = Screen.ReservationScreen.route){
-            ReservationScreen(navController = navController)
+        composable(route = Screen.ReservationScreen.route+"/{id}"){
+            ReservationScreen(navController = navController, id = it.arguments?.getInt("id")!!)
         }
     }
 }

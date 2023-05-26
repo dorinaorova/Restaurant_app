@@ -80,31 +80,31 @@ fun UserDetail(user: User){
                     text=user.name,
                     style= TextStyle(
                         fontSize = 22.sp,
-                        color = colorResource(id = R.color.primary_text))
+                        color = colorResource(id = R.color.primary_text)),
                 )
                 Text(
-                    modifier = Modifier.padding(start=8.dp),
+                    modifier = Modifier.padding(start=8.dp, top=5.dp),
                     text=user.email,
-                    style = TextStyle(color = colorResource(id = R.color.primary_text))
+                    style = TextStyle(color = colorResource(id = R.color.primary_text)),
                 )
                 Text(
-                    modifier = Modifier.padding(start=8.dp),
+                    modifier = Modifier.padding(start=8.dp, top=5.dp),
                     text=user.phone,
                     style = TextStyle(color = colorResource(id = R.color.primary_text))
                 )
                 Text(
-                    modifier = Modifier.padding(start=8.dp),
+                    modifier = Modifier.padding(start=8.dp, top=5.dp),
                     text= convertDate(user.birthDate),
                     style = TextStyle(color = colorResource(id = R.color.primary_text))
                 )
             }
-            IconButton(
+            /*IconButton(
                 onClick = { /*TODO*/  })  {
                 Icon(
                     imageVector = Icons.Outlined.Edit,
                     contentDescription = "Edit",
                     tint = colorResource(id = R.color.primary_text))
-            }
+            }*/
         }
     }
 }
