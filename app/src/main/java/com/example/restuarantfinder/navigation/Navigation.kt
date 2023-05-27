@@ -24,7 +24,7 @@ fun Navigation(navController: NavHostController){
             ProfileScreen(navController = navController)
         }
         composable(route = Screen.RestaurantScreen.route+"/{id}"){
-            RestaurantScreen(navController = navController, id = it.arguments?.getInt("id")!!)
+            RestaurantScreen(navController = navController, id = it.arguments?.getString("id"))
         }
         composable(route = Screen.SignUpScreen.route){
             SignUpScreen(navController = navController)
@@ -34,7 +34,7 @@ fun Navigation(navController: NavHostController){
             MenuScreen(navController = navController, title = it.arguments?.getString("title").toString())
         }
         composable(route = Screen.ReservationScreen.route+"/{id}"){
-            ReservationScreen(navController = navController, id = it.arguments?.getInt("id")!!)
+            ReservationScreen(navController = navController, id = it.arguments?.getString("id"))
         }
     }
 }

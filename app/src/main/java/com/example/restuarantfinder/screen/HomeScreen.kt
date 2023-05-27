@@ -1,5 +1,6 @@
 package com.example.restuarantfinder.screen
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.ClickableText
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Email
@@ -27,7 +29,10 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -89,6 +94,7 @@ fun LoginPage(navController: NavController) {
             BasicTextField(
                 value = emailForm.value,
                 onValueChange = { emailForm.value = it },
+                maxLines = 1,
                 textStyle = TextStyle(
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Medium,
@@ -127,11 +133,16 @@ fun LoginPage(navController: NavController) {
             BasicTextField(
                 value = passwordForm.value,
                 onValueChange = { passwordForm.value = it },
+                maxLines = 1,
                 textStyle = TextStyle(
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Medium,
                     color = colorResource(id = R.color.secondary_text)
                 ),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Password
+                ),
+                visualTransformation = VisualTransformation.None,
                 decorationBox = { innerTextField ->
                     Row(
                         modifier = Modifier
@@ -152,8 +163,7 @@ fun LoginPage(navController: NavController) {
                         Icon(
                             imageVector = Icons.Rounded.Lock,
                             contentDescription = null,
-                            tint = colorResource(id = R.color.secondary_text)
-                        )
+                            tint = colorResource(id = R.color.secondary_text))
                         Spacer(modifier = Modifier.width(width = 8.dp))
                         innerTextField()
                     }

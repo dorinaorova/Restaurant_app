@@ -30,12 +30,14 @@ import com.example.restuarantfinder.data.Restaurant
 import com.example.restuarantfinder.navigation.Screen
 import com.example.restuarantfinder.screen.navbar.NavBar
 
-private var restaurantId =0
+private var restaurantId : Long =0
 
 @Composable
-fun RestaurantScreen(navController: NavController, id: Int){
+fun RestaurantScreen(navController: NavController, id: String?){
     var restaurant= Init()
-    restaurantId = id
+    if (id != null) {
+        restaurantId = id.toLong()
+        }
     Scaffold(
         content = {paddingValues ->
             Box(modifier = Modifier
@@ -245,5 +247,5 @@ private fun Init(): Restaurant {
 @Composable
 @Preview(showBackground =  true)
 fun RestaurantScreenPreview(){
-    RestaurantScreen(navController = rememberNavController(), 0)
+    RestaurantScreen(navController = rememberNavController(), "0")
 }

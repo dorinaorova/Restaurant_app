@@ -68,9 +68,6 @@ fun RestaurantListScreen(navController: NavController){
 @Composable
 fun SearchBar(
 ){
-    var tfvalue by remember {
-        mutableStateOf("")
-    }
     Box{
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -129,11 +126,12 @@ fun SearchBar(
 
 @Composable
 private fun ListItem(navController: NavController ,item: Restaurant = Restaurant(0,"Étterem 1", "Budapest 11.ker", "+36201111111", "email@email.com", "10:00-20:00",null, null)){
+    var route = "${Screen.RestaurantScreen.route}/${item.id}"
     Box (modifier = Modifier
         .padding(vertical = 10.dp, horizontal = 5.dp)
         .background(color = Color.White, shape = RoundedCornerShape(size = 16.dp))
         .fillMaxWidth()
-        .clickable (onClick = {navController.navigate(route = Screen.RestaurantScreen.route)})) {
+        .clickable (onClick = {navController.navigate(route = route)})) {
         Column(
             modifier = Modifier.padding(8.dp)
         ) {

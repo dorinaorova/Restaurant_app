@@ -36,12 +36,14 @@ import java.util.*
 private var date = ""
 private var time = ""
 private var people = 0
-private var restaurantId = 0
+private var restaurantId : Long = 0
 
 
 @Composable
-fun ReservationScreen(navController: NavController, id: Int){
-    restaurantId = id
+fun ReservationScreen(navController: NavController, id: String?){
+    if(id != null) {
+        restaurantId = id.toLong()
+    }
     Box(modifier = Modifier.fillMaxSize()){
         val scroll = rememberScrollState(0)
         Header()
@@ -293,5 +295,5 @@ private fun PeopleForm(){
 @Composable
 @Preview(showBackground =  true)
 fun ReservationScreenPreview(){
-    ReservationScreen(navController = rememberNavController(), 0)
+    ReservationScreen(navController = rememberNavController(), "0")
 }
