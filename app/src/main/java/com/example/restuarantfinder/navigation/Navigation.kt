@@ -29,9 +29,9 @@ fun Navigation(navController: NavHostController){
         composable(route = Screen.SignUpScreen.route){
             SignUpScreen(navController = navController)
         }
-        composable(route = Screen.MenuScreen.route+"/{title}"){
+        composable(route = Screen.MenuScreen.route+"/{title}/{id}"){
             Log.d("Arg", it.arguments?.getString("title").toString())
-            MenuScreen(navController = navController, title = it.arguments?.getString("title").toString())
+            MenuScreen(navController = navController, title = it.arguments?.getString("title").toString(), id =  it.arguments?.getString("id").toString())
         }
         composable(route = Screen.ReservationScreen.route+"/{id}"){
             ReservationScreen(navController = navController, id = it.arguments?.getString("id"))

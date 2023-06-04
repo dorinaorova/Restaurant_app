@@ -2,14 +2,12 @@ package com.example.restuarantfinder.screen
 
 import android.app.DatePickerDialog
 import android.widget.DatePicker
-import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.DateRange
-import androidx.compose.material.icons.rounded.List
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material.icons.rounded.Timer
 import androidx.compose.runtime.*
@@ -22,21 +20,22 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.restuarantfinder.R
-import com.example.restuarantfinder.navigation.Screen
+import com.example.restuarantfinder.data.Reservation
+import com.example.restuarantfinder.viewmodel.ReservationViewModel
+import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 private var date = ""
-private var time = ""
+private var time = 0
 private var people = 0
 private var restaurantId : Long = 0
+private val vm = ReservationViewModel()
 
 
 @Composable
@@ -44,6 +43,10 @@ fun ReservationScreen(navController: NavController, id: String?){
     if(id != null) {
         restaurantId = id.toLong()
     }
+    LaunchedEffect(Unit, block ={
+        vm.getRestaurantDatas(restaurantId)
+    } )
+
     Box(modifier = Modifier.fillMaxSize()){
         val scroll = rememberScrollState(0)
         Header()
@@ -101,8 +104,9 @@ private fun Datas(scroll : ScrollState, navController: NavController){
             Box(modifier = Modifier.padding(horizontal = 60.dp)) {
                 Button(
                     onClick = {
-                        navController.navigate(route = Screen.RestaurantScreen.route)
-                        Toast.makeText(context, "$date $time $people", Toast.LENGTH_SHORT ).show()
+                        val df = SimpleDateFormat("yyyy.MM.dd")
+                        vm.addReservation(Reservation(0,null,null, df.parse(date).time, time, people),
+                            restaurantId,context,navController)
                     },
                     shape = RoundedCornerShape(16.dp),
                     colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.dark_primary)),
@@ -171,7 +175,6 @@ private fun DatePickerForm(){
                 style = MaterialTheme.typography.subtitle1,
                 color = colorResource(R.color.secondary_text))
         }
-
         date = mDate.value;
     }
 }
@@ -179,7 +182,7 @@ private fun DatePickerForm(){
 @Composable
 private fun TimePickerForm(){
     var expanded by remember { mutableStateOf(false) }
-    val items = listOf("10:00-12:00", "12:00-14:00", "14:00-16:00","16:00-18:00","18:00-20:00")
+    val items = createTimeList()
     var selectedIndex by remember { mutableStateOf(0) }
 
     Box(modifier = Modifier
@@ -218,7 +221,7 @@ private fun TimePickerForm(){
                         onClick = {
                             selectedIndex = index
                             expanded = false
-                            time = items[selectedIndex]
+                            time = getTimeFromForm(items[selectedIndex])
                         },
                         modifier = Modifier.fillMaxWidth()
                     ) {
@@ -234,10 +237,32 @@ private fun TimePickerForm(){
     }
 }
 
+private fun createTimeList(): ArrayList<String>{
+    val list = arrayListOf<String>("0")
+    if(vm.restaurant.open!=0) {
+        list.clear()
+        for (i: Int in (vm.restaurant.open / 100) until (vm.restaurant.close / 100) - 1) {
+            val hour = if (i < 10) "0$i" else "$i"
+            list.add(hour + ":00")
+            list.add(hour + ":30")
+        }
+    }
+    return list
+}
+
+private fun getTimeFromForm(timeStr: String): Int{
+    val time = SimpleDateFormat("HH:mm").parse(timeStr)
+    return time.hours*100+time.minutes
+}
 @Composable
 private fun PeopleForm(){
     var expanded by remember { mutableStateOf(false) }
-    val items = IntRange(1,15).toList()
+    var items: List<Int>
+    if(vm.restaurant.tables>0) {
+        items = IntRange(1, vm.restaurant.tables).toList()
+    }else{
+        items = listOf(0)
+    }
     var selectedIndex by remember { mutableStateOf(0) }
 
     Box(modifier = Modifier

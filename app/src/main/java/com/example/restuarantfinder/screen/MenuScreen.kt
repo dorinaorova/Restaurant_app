@@ -1,5 +1,7 @@
 package com.example.restuarantfinder.screen
 
+import android.util.Log
+import android.view.Menu
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -10,6 +12,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,19 +26,38 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.restuarantfinder.R
+import com.example.restuarantfinder.api.RestaurantApi
 import com.example.restuarantfinder.data.MenuItem
 import com.example.restuarantfinder.data.Reservation
+import com.example.restuarantfinder.data.Restaurant
 import com.example.restuarantfinder.navigation.Screen
+import com.example.restuarantfinder.viewmodel.MenuViewModel
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 private var menuTitle =""
+private var restaurantId: Long = 0
+//private var menu: List<MenuItem> = listOf()
+private var vm = MenuViewModel()
 @Composable
-fun MenuScreen(navController: NavController, title: String?){
-    var menu = Init()
+fun MenuScreen(navController: NavController, title: String?, id: String?){
+    if (id != null) {
+        restaurantId = id.toLong()
+        Log.d("id", "$restaurantId")
+    }
+    LaunchedEffect(Unit, block ={
+        vm.getMenu(menuTitle.contentEquals("Étlap") , restaurantId)
+    } )
+
     menuTitle = title!!
+
     Box(modifier = Modifier.fillMaxSize()) {
-        Column() {
+        Column{
             Header()
-            MenuList(menu)
+            MenuList()
         }
     }
 }
@@ -64,13 +86,13 @@ private fun Header(){
 }
 
 @Composable
-private fun MenuList(menu: List<MenuItem>){
+private fun MenuList(){
     Column(
         modifier = Modifier
             .background(colorResource(R.color.light_primary))
     ) {
         LazyColumn {
-            items(menu) { item ->
+            items(vm.menu) { item ->
                 MenuListItem(item)
             }
         }
@@ -99,25 +121,18 @@ private fun MenuListItem(item: MenuItem){
                     modifier = Modifier.padding(10.dp),
                 )
             }
-            Text(
-                text=item.description,
-                modifier = Modifier.padding(10.dp)
-            )
+            if(item.description!=null) {
+                Text(
+                    text = item.description.toString(),
+                    modifier = Modifier.padding(10.dp)
+                )
+            }
         }
     }
-}
-
-private fun Init(): List<MenuItem>{
-    var menu = arrayListOf<MenuItem>()
-    for(i in 0.. 10){
-        var item = MenuItem("Food$i", (i+1)*1000, "Cat ipsum dolor sit amet, attack like a vicious monster and where is it? i saw that bird i need to bring it home to mommy squirrel! need to check on human,")
-        menu.add(item)
-    }
-    return menu
 }
 
 @Composable
 @Preview(showBackground =  true)
 fun MenuScreenPreview(){
-    MenuScreen(navController = rememberNavController(), "Étlap")
+    MenuScreen(navController = rememberNavController(), "Étlap", "0")
 }

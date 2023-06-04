@@ -1,5 +1,6 @@
 package com.example.restuarantfinder.screen
 
+import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
@@ -13,6 +14,7 @@ import androidx.compose.material.icons.rounded.Email
 import androidx.compose.material.icons.rounded.List
 import androidx.compose.material.icons.rounded.Phone
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -25,19 +27,34 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.restuarantfinder.R
+import com.example.restuarantfinder.api.RestaurantApi
 import com.example.restuarantfinder.data.MenuItem
 import com.example.restuarantfinder.data.Restaurant
 import com.example.restuarantfinder.navigation.Screen
 import com.example.restuarantfinder.screen.navbar.NavBar
+import com.example.restuarantfinder.viewmodel.RestaurantViewModel
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
+private var vm = RestaurantViewModel()
 private var restaurantId : Long =0
+private var restaurant: Restaurant = Restaurant()
 
 @Composable
 fun RestaurantScreen(navController: NavController, id: String?){
-    var restaurant= Init()
     if (id != null) {
         restaurantId = id.toLong()
-        }
+    }
+
+    LaunchedEffect(Unit, block ={
+        vm.getRestaurantDatas(restaurantId)
+    } )
+
+    restaurant = vm.restaurant
+
     Scaffold(
         content = {paddingValues ->
             Box(modifier = Modifier
@@ -99,7 +116,7 @@ fun Body(restaurant: Restaurant, scroll: ScrollState, navController: NavControll
                     modifier = Modifier.padding(horizontal = 20.dp)
                 )
                 Text(
-                    text=restaurant.open,
+                    text= CreateOpenString(),
                     modifier = Modifier.padding(horizontal = 30.dp)
                 )
             }
@@ -148,8 +165,12 @@ fun Body(restaurant: Restaurant, scroll: ScrollState, navController: NavControll
                             )
                         }
             }
-            MenuRow(restaurant.menu_Food!!, "Étlap", navController)
-            MenuRow(restaurant.menu_Drink!!, "Itallap", navController)
+            if(restaurant.menu_Food != null) {
+                MenuRow(restaurant.menu_Food!!, "Étlap", navController)
+            }
+            if(restaurant.menu_Drink!=null) {
+                MenuRow(restaurant.menu_Drink!!, "Itallap", navController)
+            }
         }
     }
 }
@@ -176,7 +197,7 @@ fun MenuRow(list: List<MenuItem>, title: String, navController: NavController){
         Text(text=title,
             style= MaterialTheme.typography.h6,
             color = colorResource(id = R.color.secondary_text))
-        var route = Screen.MenuScreen.route+"/"+title
+        var route = Screen.MenuScreen.route+"/"+title+"/"+ restaurantId
         IconButton(onClick = {navController.navigate(route = route)},
         modifier = Modifier
             .size(10.dp)
@@ -223,27 +244,14 @@ private fun CreateList(menuBase: List<MenuItem>):List<MenuItem>{
     }else return menuBase
 }
 
-private fun Init(): Restaurant {
-    var restaurant = Restaurant(0,"Étterem 1", "Budapest 11.ker", "+36201111111", "email@email.com", "10:00-20:00", null, null)
-
-    val food1 = MenuItem("Food1", 2000, "Cat ipsum dolor sit amet, russian blue, thai and sphynx so savannah. Malkin cornish rex but tom malkin for cheetah scottish fold.")
-    val food2 = MenuItem("Food2", 2300, "Cat ipsum dolor sit amet, russian blue, thai and sphynx so savannah. Malkin cornish rex but tom malkin for cheetah scottish fold.")
-    val food3 = MenuItem("Food3", 2450, "Cat ipsum dolor sit amet, russian blue, thai and sphynx so savannah. Malkin cornish rex but tom malkin for cheetah scottish fold.")
-    val food4 = MenuItem("Food4", 3000, "Cat ipsum dolor sit amet, russian blue, thai and sphynx so savannah. Malkin cornish rex but tom malkin for cheetah scottish fold.")
-
-    restaurant.menu_Food = listOf(food1, food2, food3, food4)
-
-    val drink1 = MenuItem("Drink1", 1200, "Cat ipsum dolor sit amet, chase laser. Make plans to dominate world and then take a nap take a deep sniff of sock then walk around with mouth half open for my left donut is missing, as is my right and this cat happen now, it was too purr-fect!!!")
-    val drink2 = MenuItem("Drink2", 1200, "Cat ipsum dolor sit amet, chase laser. Make plans to dominate world and then take a nap take a deep sniff of sock then walk around with mouth half open for my left donut is missing, as is my right and this cat happen now, it was too purr-fect!!!")
-    val drink3 = MenuItem("Drink3", 1200, "Cat ipsum dolor sit amet, chase laser. Make plans to dominate world and then take a nap take a deep sniff of sock then walk around with mouth half open for my left donut is missing, as is my right and this cat happen now, it was too purr-fect!!!")
-    val drink4 = MenuItem("Drink4", 1200, "Cat ipsum dolor sit amet, chase laser. Make plans to dominate world and then take a nap take a deep sniff of sock then walk around with mouth half open for my left donut is missing, as is my right and this cat happen now, it was too purr-fect!!!")
-    val drink5 = MenuItem("Drink5", 1200, "Cat ipsum dolor sit amet, chase laser. Make plans to dominate world and then take a nap take a deep sniff of sock then walk around with mouth half open for my left donut is missing, as is my right and this cat happen now, it was too purr-fect!!!")
-
-    restaurant.menu_Drink = listOf(drink1, drink2, drink3, drink4,drink5 )
-
-    return restaurant
+private fun CreateOpenString():String{
+    val openMinutes = if(restaurant.open%100 == 0) "00" else (restaurant.open%100).toString()
+    val openHours = if(restaurant.open/100 < 10) "0${restaurant.open/100}" else (restaurant.open/100).toString()
+    val closeMinutes = if(restaurant.close%100 == 0) "00" else (restaurant.close%100).toString()
+    val closeHours = if(restaurant.close/100 < 10) "0${restaurant.close/100}" else (restaurant.close/100).toString()
+    val openStr= "$openHours:$openMinutes - $closeHours:$closeMinutes"
+    return openStr
 }
-
 @Composable
 @Preview(showBackground =  true)
 fun RestaurantScreenPreview(){

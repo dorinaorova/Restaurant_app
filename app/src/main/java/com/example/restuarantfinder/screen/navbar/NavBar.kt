@@ -15,11 +15,11 @@ import com.example.restuarantfinder.R
 
 
 val bottomNavItems = listOf(
-    BottomNavItem(
-        name = "Home",
-        route = "home_screen",
-        icon = Icons.Rounded.Home,
-    ),
+//    BottomNavItem(
+//        name = "Home",
+//        route = "home_screen",
+//        icon = Icons.Rounded.Home,
+//    ),
     BottomNavItem(
         name = "Search",
         route = "list_screen",

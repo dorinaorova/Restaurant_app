@@ -11,7 +11,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
+import androidx.compose.material.Icon
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
@@ -32,18 +34,21 @@ import com.example.restuarantfinder.R
 import com.example.restuarantfinder.data.Restaurant
 import com.example.restuarantfinder.navigation.Screen
 import com.example.restuarantfinder.screen.navbar.NavBar
+import com.example.restuarantfinder.viewmodel.RestaurantListViewModel
 
+//private var restaurants : List<Restaurant> = listOf()
+private val vm = RestaurantListViewModel()
 @Composable
 fun RestaurantListScreen(navController: NavController){
-    var restaurants = arrayListOf<Restaurant>()
-    for (i in 0 .. 25   ) {
-        restaurants.add(Restaurant(0,"Étterem 1", "Budapest 11.ker", "+36201111111", "email@email.com", "10:00-20:00", null, null))
-        restaurants.add(Restaurant(1, "Étterem 2", "Budapest 12.ker", "+36202222222", "email@email.com", "10:00-20:00",null, null))
-    }
+    LaunchedEffect(Unit, block ={
+        vm.getRestaurants()
+    } )
+
     Scaffold(
         content = {
                 paddingValues ->
-            Box(modifier = Modifier.fillMaxSize()
+            Box(modifier = Modifier
+                .fillMaxSize()
                 .padding(paddingValues)) {
                 Column(modifier = Modifier.background(colorResource(R.color.light_primary))) {
                     SearchBar()
@@ -52,7 +57,7 @@ fun RestaurantListScreen(navController: NavController){
                             .padding(8.dp)
                     ) {
                         LazyColumn {
-                            items(restaurants) { item ->
+                            items(vm.restaurants) { item ->
                                 ListItem(navController, item)
                             }
                         }
@@ -125,17 +130,19 @@ fun SearchBar(
 }
 
 @Composable
-private fun ListItem(navController: NavController ,item: Restaurant = Restaurant(0,"Étterem 1", "Budapest 11.ker", "+36201111111", "email@email.com", "10:00-20:00",null, null)){
+private fun ListItem(navController: NavController ,item: Restaurant = Restaurant()){
     var route = "${Screen.RestaurantScreen.route}/${item.id}"
     Box (modifier = Modifier
         .padding(vertical = 10.dp, horizontal = 5.dp)
         .background(color = Color.White, shape = RoundedCornerShape(size = 16.dp))
         .fillMaxWidth()
-        .clickable (onClick = {navController.navigate(route = route)})) {
+        .clickable(onClick = { navController.navigate(route = route) })) {
         Column(
             modifier = Modifier.padding(8.dp)
         ) {
-            Row {
+            Row(modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = item.name,
                     modifier = Modifier.padding(10.dp),
