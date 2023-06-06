@@ -109,7 +109,7 @@ fun Body(scroll: ScrollState, navController: NavController){
                         modifier = Modifier.padding(horizontal = 30.dp)
                     )
                     Row(modifier = Modifier
-                        .height(10.dp)
+                        .height(18.dp)
                         .padding(top = 8.dp)) {
                         if (vm.restaurant.types != null) {
                             if (vm.restaurant.types!!.contains(TypeEnum.VEGAN)) {

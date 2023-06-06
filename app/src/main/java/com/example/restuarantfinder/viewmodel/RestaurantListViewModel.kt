@@ -84,7 +84,7 @@ class RestaurantListViewModel: ViewModel() {
         }else if(name.contentEquals("Állatbarát")){
             if(filters.contains(TypeEnum.PET)) filters.remove(TypeEnum.PET)
             else filters.add(TypeEnum.PET)
-        }else if(name.contentEquals("Kavázó")){
+        }else if(name.contentEquals("Kávézó")){
             if(filters.contains(TypeEnum.CAFE)) filters.remove(TypeEnum.CAFE)
             else filters.add(TypeEnum.CAFE)
         }else{

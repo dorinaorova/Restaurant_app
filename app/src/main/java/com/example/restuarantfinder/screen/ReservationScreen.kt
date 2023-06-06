@@ -26,18 +26,19 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.restuarantfinder.R
 import com.example.restuarantfinder.data.Reservation
+import com.example.restuarantfinder.navigation.Screen
 import com.example.restuarantfinder.viewmodel.ReservationViewModel
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.util.*
 import kotlin.collections.ArrayList
 
-private var date = ""
-private var time = 0
-private var people = 0
+private var date = mutableStateOf("")
+private var time = mutableStateOf(0)
+private var people = mutableStateOf(0)
 private var restaurantId : Long = 0
 private val vm = ReservationViewModel()
-
+private var enabled = mutableStateOf(date.value.isNotEmpty() && time.value!=0 && people.value!=0)
 
 @Composable
 fun ReservationScreen(navController: NavController, id: String?){
@@ -106,14 +107,15 @@ private fun Datas(scroll : ScrollState, navController: NavController){
                 Button(
                     onClick = {
                         val df = SimpleDateFormat("yyyy.MM.dd")
-                        vm.addReservation(Reservation(0,null,null, df.parse(date).time, time, people),
+                        vm.addReservation(Reservation(0,null,null, df.parse(date.value).time, time.value, people.value),
                             restaurantId,context,navController)
                     },
                     shape = RoundedCornerShape(16.dp),
                     colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.dark_primary)),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(50.dp)
+                        .height(50.dp),
+                    enabled = enabled.value
 
                 ) {
                     Text(text = "OK",
@@ -179,7 +181,8 @@ private fun DatePickerForm(){
                 style = MaterialTheme.typography.subtitle1,
                 color = colorResource(R.color.secondary_text))
         }
-        date = mDate.value;
+        date.value = mDate.value
+        enabled.value = date.value.isNotEmpty() && time.value!=0 && people.value!=0
     }
 }
 
@@ -225,7 +228,8 @@ private fun TimePickerForm(){
                         onClick = {
                             selectedIndex = index
                             expanded = false
-                            time = getTimeFromForm(items[selectedIndex])
+                            time.value = getTimeFromForm(items[selectedIndex])
+                            enabled.value = date.value.isNotEmpty() && time.value!=0 && people.value!=0
                         },
                         modifier = Modifier.fillMaxWidth()
                     ) {
@@ -305,7 +309,8 @@ private fun PeopleForm(){
                         onClick = {
                             selectedIndex = index
                             expanded = false
-                            people = items[selectedIndex]
+                            people.value = items[selectedIndex]
+                            enabled.value = date.value.isNotEmpty() && time.value!=0 && people.value!=0
                         },
                         modifier = Modifier.fillMaxWidth()
                     ) {

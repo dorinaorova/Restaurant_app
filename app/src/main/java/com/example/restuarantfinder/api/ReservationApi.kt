@@ -19,9 +19,6 @@ interface ReservationApi {
     @POST("save/{userId}/{restaurantId}")
     abstract fun saveReservation(@Path("userId") userId: Long, @Path("restaurantId") restaurantId: Long, @Body reservation: Reservation) : Call<Reservation?>?
 
-    @DELETE("delete/{id}")
-    abstract fun deleteReservation(@Path("id") id: Long) : Call<Any>?
-
     companion object {
         var apiService: ReservationApi? = null
         fun getInstance(): ReservationApi {

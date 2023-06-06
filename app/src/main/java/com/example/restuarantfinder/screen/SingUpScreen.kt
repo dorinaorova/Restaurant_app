@@ -57,7 +57,7 @@ private var email = mutableStateOf("")
 private var phone = mutableStateOf("")
 private var password = mutableStateOf("")
 private var date = mutableStateOf("")
-var enabled = mutableStateOf(name.value.isNotEmpty() && email.value.isNotEmpty() && phone.value.isNotEmpty() && password.value.isNotEmpty())
+private var enabled = mutableStateOf(name.value.isNotEmpty() && email.value.isNotEmpty() && phone.value.isNotEmpty() && password.value.isNotEmpty())
 private var vm = SignUpViewModel()
 
 @Composable
@@ -130,7 +130,8 @@ private fun Datas(scroll : ScrollState, navController: NavController){
                     colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.dark_primary)),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(50.dp),
+                        .height(50.dp)
+                        .padding(bottom = 10.dp),
                     enabled = enabled.value
 
                 ) {

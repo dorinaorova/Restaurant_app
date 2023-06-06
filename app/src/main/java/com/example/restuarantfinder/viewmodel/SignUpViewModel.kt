@@ -3,6 +3,7 @@ package com.example.restuarantfinder.viewmodel
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -35,6 +36,7 @@ class SignUpViewModel : ViewModel() {
                     editor.commit()
                 }
                 else{
+                    Toast.makeText(context, "Ezzel az email-címmel már létezik regisztrált felhasználó", Toast.LENGTH_SHORT ).show()
                     Log.d("HIBA ", response?.code().toString())
                 }
             }catch(e: java.lang.Exception){

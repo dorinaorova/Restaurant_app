@@ -45,7 +45,7 @@ fun NavBar(navController: NavController){
 
             NavigationBarItem(
                 selected = selected,
-                onClick = { navController.navigate(item.route) },
+                onClick = { navController.navigate(item.route) { launchSingleTop = true }},
                 icon = {
                     Icon(
                         imageVector = item.icon,

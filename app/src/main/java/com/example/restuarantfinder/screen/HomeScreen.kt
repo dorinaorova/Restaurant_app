@@ -59,8 +59,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 private var email = ""
 private var password =""
-private var success = false
-private var userId =  0L
 private val vm = LoginViewModel()
 
 @Composable
@@ -70,9 +68,8 @@ fun HomeScreen( navController: NavController) {
         Image(
             painterResource(id = R.drawable.background),
             contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .fillMaxHeight()
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.FillBounds
         )
         Column(
             modifier = Modifier.fillMaxSize(),

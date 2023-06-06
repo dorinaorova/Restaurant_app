@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">RESTing</string>
     <string name="title_activity_restaurant_list">RestaurantListActivity</string>
+    <string name="base_url">http://152.66.183.24:8080/</string>
 </resources>

@@ -138,17 +138,6 @@ private fun ListItem(item: Reservation){
                     Text(text = "${convertDate(item.date)} ${createTimeStr(item.time)}")
                     Text(text = "${item.people} fő")
                 }
-                Column{
-                    IconButton(
-                        onClick = {
-                            vm.deleteReservation(item.id)
-                        })  {
-                        Icon(
-                            imageVector = Icons.Outlined.Delete,
-                            contentDescription = null,
-                            tint = colorResource(id = R.color.secondary_text))
-                    }
-                }
             }
         }
     }
