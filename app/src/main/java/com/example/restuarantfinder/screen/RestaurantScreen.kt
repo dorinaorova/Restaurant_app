@@ -1,18 +1,15 @@
 package com.example.restuarantfinder.screen
 
-import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ArrowForward
-import androidx.compose.material.icons.rounded.Email
-import androidx.compose.material.icons.rounded.List
-import androidx.compose.material.icons.rounded.Phone
+import androidx.compose.material.icons.rounded.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -27,21 +24,14 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.restuarantfinder.R
-import com.example.restuarantfinder.api.RestaurantApi
 import com.example.restuarantfinder.data.MenuItem
-import com.example.restuarantfinder.data.Restaurant
+import com.example.restuarantfinder.data.TypeEnum
 import com.example.restuarantfinder.navigation.Screen
 import com.example.restuarantfinder.screen.navbar.NavBar
 import com.example.restuarantfinder.viewmodel.RestaurantViewModel
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 private var vm = RestaurantViewModel()
 private var restaurantId : Long =0
-private var restaurant: Restaurant = Restaurant()
 
 @Composable
 fun RestaurantScreen(navController: NavController, id: String?){
@@ -53,14 +43,12 @@ fun RestaurantScreen(navController: NavController, id: String?){
         vm.getRestaurantDatas(restaurantId)
     } )
 
-    restaurant = vm.restaurant
-
     Scaffold(
         content = {paddingValues ->
             Box(modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)){
-            RestaurantDetails(restaurant, navController)
+            RestaurantDetails(navController)
             }
         },
         bottomBar ={ NavBar(navController)}
@@ -68,11 +56,11 @@ fun RestaurantScreen(navController: NavController, id: String?){
 }
 
 @Composable
-fun RestaurantDetails(restaurant: Restaurant, navController: NavController){
+fun RestaurantDetails(navController: NavController){
         Box(Modifier.fillMaxSize()){
             val scroll = rememberScrollState(0)
             Header()
-            Body(restaurant, scroll, navController)
+            Body(scroll, navController)
         }
 }
 
@@ -92,7 +80,7 @@ private fun Header(){
 }
 
 @Composable
-fun Body(restaurant: Restaurant, scroll: ScrollState, navController: NavController){
+fun Body(scroll: ScrollState, navController: NavController){
 
     Column{
         Spacer(modifier = Modifier
@@ -111,17 +99,57 @@ fun Body(restaurant: Restaurant, scroll: ScrollState, navController: NavControll
             Row(modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween){
                 Text(
-                    text=restaurant.name,
+                    text=vm.restaurant.name,
                     style= MaterialTheme.typography.h4,
                     modifier = Modifier.padding(horizontal = 20.dp)
                 )
-                Text(
-                    text= CreateOpenString(),
-                    modifier = Modifier.padding(horizontal = 30.dp)
-                )
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        text = CreateOpenString(),
+                        modifier = Modifier.padding(horizontal = 30.dp)
+                    )
+                    Row(modifier = Modifier
+                        .height(10.dp)
+                        .padding(top = 8.dp)) {
+                        if (vm.restaurant.types != null) {
+                            if (vm.restaurant.types!!.contains(TypeEnum.VEGAN)) {
+                                Icon(
+                                    imageVector = Icons.Rounded.FilterVintage,
+                                    contentDescription = null,
+                                    tint = colorResource(id = R.color.secondary_text),
+                                    modifier = Modifier.padding(horizontal = 5.dp)
+                                )
+                            }
+                            if(vm.restaurant.types!!.contains(TypeEnum.PET)) {
+                                Icon(
+                                    imageVector = Icons.Rounded.Pets,
+                                    contentDescription = null,
+                                    tint = colorResource(id = R.color.secondary_text),
+                                    modifier = Modifier.padding(horizontal = 5.dp)
+                                )
+                            }
+                            if(vm.restaurant.types!!.contains(TypeEnum.CAFE)) {
+                                Icon(
+                                    imageVector = Icons.Rounded.LocalCafe,
+                                    contentDescription = null,
+                                    tint = colorResource(id = R.color.secondary_text),
+                                    modifier = Modifier.padding(horizontal = 5.dp)
+                                )
+                            }
+                            if(vm.restaurant.types!!.contains(TypeEnum.BAR)) {
+                                Icon(
+                                    imageVector = Icons.Rounded.LocalBar,
+                                    contentDescription = null,
+                                    tint = colorResource(id = R.color.secondary_text),
+                                    modifier = Modifier.padding(horizontal = 5.dp)
+                                )
+                            }
+                        }
+                    }
+                }
             }
             Text(
-                text=restaurant.address,
+                text=vm.restaurant.address,
                 style = MaterialTheme.typography.overline,
                 modifier = Modifier.padding(start = 40.dp)
             )
@@ -137,8 +165,8 @@ fun Body(restaurant: Restaurant, scroll: ScrollState, navController: NavControll
                             contentDescription = null
                         )
                         Text(
-                            text = restaurant.phone,
-                            modifier = Modifier.padding(start=5.dp)
+                            text = vm.restaurant.phone,
+                            modifier = Modifier.padding(start=10.dp)
                         )
                     }
                     Row(
@@ -150,12 +178,13 @@ fun Body(restaurant: Restaurant, scroll: ScrollState, navController: NavControll
                             contentDescription = null
                         )
                         Text(
-                            text = restaurant.email,
+                            text = vm.restaurant.email,
+                            modifier = Modifier.padding(start=10.dp)
                         )
                     }
                 }
                 IconButton(onClick = {
-                    var route = Screen.ReservationScreen.route+"/"+restaurant.id
+                    val route = Screen.ReservationScreen.route+"/"+vm.restaurant.id
                     navController.navigate(route = route) },
                             modifier = Modifier.padding(end = 30.dp)){
                             Icon(
@@ -165,11 +194,11 @@ fun Body(restaurant: Restaurant, scroll: ScrollState, navController: NavControll
                             )
                         }
             }
-            if(restaurant.menu_Food != null) {
-                MenuRow(restaurant.menu_Food!!, "Étlap", navController)
+            if(vm.restaurant.menu_Food != null) {
+                MenuRow(vm.restaurant.menu_Food!!, "Étlap", navController)
             }
-            if(restaurant.menu_Drink!=null) {
-                MenuRow(restaurant.menu_Drink!!, "Itallap", navController)
+            if(vm.restaurant.menu_Drink!=null) {
+                MenuRow(vm.restaurant.menu_Drink!!, "Itallap", navController)
             }
         }
     }
@@ -197,7 +226,7 @@ fun MenuRow(list: List<MenuItem>, title: String, navController: NavController){
         Text(text=title,
             style= MaterialTheme.typography.h6,
             color = colorResource(id = R.color.secondary_text))
-        var route = Screen.MenuScreen.route+"/"+title+"/"+ restaurantId
+        val route = Screen.MenuScreen.route+"/"+title+"/"+ restaurantId
         IconButton(onClick = {navController.navigate(route = route)},
         modifier = Modifier
             .size(10.dp)
@@ -211,8 +240,8 @@ fun MenuRow(list: List<MenuItem>, title: String, navController: NavController){
         }
     }
     LazyRow{
-        itemsIndexed(CreateList(list)){
-                index, item -> MenuListItem(item = item)
+        items(CreateList(list)){
+                item -> MenuListItem(item = item)
         }
     }
 }
@@ -236,7 +265,7 @@ private fun MenuListItem(item: MenuItem){
 
 private fun CreateList(menuBase: List<MenuItem>):List<MenuItem>{
     if(menuBase.size>5) {
-        var menu = arrayListOf<MenuItem>()
+        val menu = arrayListOf<MenuItem>()
         for (i in 0..5) {
             menu.add(menuBase[i])
         }
@@ -245,10 +274,10 @@ private fun CreateList(menuBase: List<MenuItem>):List<MenuItem>{
 }
 
 private fun CreateOpenString():String{
-    val openMinutes = if(restaurant.open%100 == 0) "00" else (restaurant.open%100).toString()
-    val openHours = if(restaurant.open/100 < 10) "0${restaurant.open/100}" else (restaurant.open/100).toString()
-    val closeMinutes = if(restaurant.close%100 == 0) "00" else (restaurant.close%100).toString()
-    val closeHours = if(restaurant.close/100 < 10) "0${restaurant.close/100}" else (restaurant.close/100).toString()
+    val openMinutes = if(vm.restaurant.open%100 == 0) "00" else (vm.restaurant.open%100).toString()
+    val openHours = if(vm.restaurant.open/100 < 10) "0${vm.restaurant.open/100}" else (vm.restaurant.open/100).toString()
+    val closeMinutes = if(vm.restaurant.close%100 == 0) "00" else (vm.restaurant.close%100).toString()
+    val closeHours = if(vm.restaurant.close/100 < 10) "0${vm.restaurant.close/100}" else (vm.restaurant.close/100).toString()
     val openStr= "$openHours:$openMinutes - $closeHours:$closeMinutes"
     return openStr
 }

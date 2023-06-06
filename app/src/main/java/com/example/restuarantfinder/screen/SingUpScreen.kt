@@ -48,6 +48,8 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.*
 
 private var name  = mutableStateOf("")
@@ -160,11 +162,15 @@ private fun DatePickerForm(){
 
     val mDate = remember { mutableStateOf("") }
 
-    val datePickerDialog = DatePickerDialog(mContext,
+    val datePickerDialog = DatePickerDialog(mContext,R.style.DialogTheme,
         { _: DatePicker, mYear: Int, mMonth: Int, mDayOfMonth: Int ->
             mDate.value = "$mYear. ${mMonth+1}. $mDayOfMonth."
         }, mYear, mMonth, mDay
     )
+    mCalendar.set(LocalDateTime.now().year, LocalDateTime.now().monthValue-1, LocalDateTime.now().dayOfMonth)
+    datePickerDialog.datePicker.maxDate = mCalendar.timeInMillis
+
+
 
     Text(text="Születési dátum",
         style = MaterialTheme.typography.subtitle1,

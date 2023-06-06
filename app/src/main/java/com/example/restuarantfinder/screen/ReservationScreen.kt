@@ -28,6 +28,7 @@ import com.example.restuarantfinder.R
 import com.example.restuarantfinder.data.Reservation
 import com.example.restuarantfinder.viewmodel.ReservationViewModel
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -143,11 +144,14 @@ private fun DatePickerForm(){
 
     val mDate = remember { mutableStateOf("") }
 
-    val datePickerDialog = DatePickerDialog(mContext,
+    val datePickerDialog = DatePickerDialog(mContext,R.style.DialogTheme,
         { _: DatePicker, mYear: Int, mMonth: Int, mDayOfMonth: Int ->
             mDate.value = "$mYear. ${mMonth+1}. $mDayOfMonth."
         }, mYear, mMonth, mDay
     )
+
+    mCalendar.set(LocalDateTime.now().year, LocalDateTime.now().monthValue-1, LocalDateTime.now().dayOfMonth)
+    datePickerDialog.datePicker.minDate = mCalendar.timeInMillis
 
     Box(modifier = Modifier
         .clickable(onClick = { datePickerDialog.show() })

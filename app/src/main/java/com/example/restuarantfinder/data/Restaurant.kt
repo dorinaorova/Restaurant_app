@@ -10,7 +10,8 @@ data class Restaurant(
     var close: Int,
     var menu_Food: List<MenuItem>?,
     var menu_Drink: List<MenuItem>?,
+    var types: List<TypeEnum>?,
     var tables: Int
 ){
-    constructor() : this(0, "","","","",0,0,null,null,0)
+    constructor() : this(0, "","","","",0,0,null,null,null,0)
 }

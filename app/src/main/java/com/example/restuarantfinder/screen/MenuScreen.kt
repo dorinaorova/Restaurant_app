@@ -40,7 +40,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 private var menuTitle =""
 private var restaurantId: Long = 0
-//private var menu: List<MenuItem> = listOf()
 private var vm = MenuViewModel()
 @Composable
 fun MenuScreen(navController: NavController, title: String?, id: String?){
@@ -89,6 +88,7 @@ private fun Header(){
 private fun MenuList(){
     Column(
         modifier = Modifier
+            .fillMaxSize()
             .background(colorResource(R.color.light_primary))
     ) {
         LazyColumn {

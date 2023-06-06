@@ -2,6 +2,7 @@ package com.example.restuarantfinder.api
 
 import com.example.restuarantfinder.data.Reservation
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
@@ -19,7 +20,7 @@ interface ReservationApi {
     abstract fun saveReservation(@Path("userId") userId: Long, @Path("restaurantId") restaurantId: Long, @Body reservation: Reservation) : Call<Reservation?>?
 
     @DELETE("delete/{id}")
-    abstract fun deleteReservation(@Path("id") id: Long)
+    abstract fun deleteReservation(@Path("id") id: Long) : Call<Any>?
 
     companion object {
         var apiService: ReservationApi? = null

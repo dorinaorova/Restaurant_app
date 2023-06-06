@@ -140,7 +140,9 @@ private fun ListItem(item: Reservation){
                 }
                 Column{
                     IconButton(
-                        onClick = { /*TODO*/  })  {
+                        onClick = {
+                            vm.deleteReservation(item.id)
+                        })  {
                         Icon(
                             imageVector = Icons.Outlined.Delete,
                             contentDescription = null,

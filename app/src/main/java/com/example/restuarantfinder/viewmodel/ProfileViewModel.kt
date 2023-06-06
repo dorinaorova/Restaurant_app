@@ -44,7 +44,35 @@ class ProfileViewModel : ViewModel(){
                 val response_Res = call_Res?.awaitResponse()
 
                 if(response_Res?.isSuccessful == true){
+                    _reservations.clear()
                     _reservations.addAll(response_Res.body()!!)
+                }
+
+            }catch(e: java.lang.Exception){
+                errorMessage = e.message.toString()
+                Log.d("ERROR ", errorMessage)
+            }
+        }
+    }
+
+    fun deleteReservation(id: Long){
+        viewModelScope.launch {
+            try{
+                val reservationApi = ReservationApi.getInstance()
+                val call = reservationApi.deleteReservation(id)
+                val res = call?.awaitResponse()
+                if(res?.isSuccessful == false){
+                    Log.d("HIBA ", res.toString())
+                }
+
+                val call_Res = reservationApi.findByUser(user.id)
+                val response_Res = call_Res?.awaitResponse()
+
+                if(response_Res?.isSuccessful == true){
+                    _reservations.clear()
+                    _reservations.addAll(response_Res.body()!!)
+                }else{
+                    Log.d("HIBA ", response_Res.toString())
                 }
 
             }catch(e: java.lang.Exception){
