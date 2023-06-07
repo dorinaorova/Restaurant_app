@@ -1,6 +1,5 @@
 package com.example.restuarantfinder.api
 
-import com.example.restuarantfinder.R
 import com.example.restuarantfinder.data.User
 import retrofit2.Call
 import retrofit2.Retrofit

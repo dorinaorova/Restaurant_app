@@ -192,9 +192,12 @@ private fun ListItem(navController: NavController ,item: Restaurant = Restaurant
                     modifier = Modifier.padding(10.dp),
                     fontSize = 24.sp
                 )
-                Column {
-                    Text(text = item.address)
-                    Text(text = item.phone)
+                Column(modifier = Modifier.width(100.dp)) {
+                    Text(text = item.address,
+                        style = MaterialTheme.typography.overline
+                    )
+                    Text(text = item.phone,
+                        style = MaterialTheme.typography.overline)
                 }
             }
             Row(modifier = Modifier
